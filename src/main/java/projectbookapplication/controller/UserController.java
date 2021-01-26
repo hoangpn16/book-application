@@ -27,9 +27,14 @@ public class UserController {
         return result;
     }
     @PostMapping(value="/insert",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public String registerUser(){
-        userService.insertUser("Nghia Hung","0123456789","hung","hungngao@gmail.com");
-        return "Register Succesfully";
+    public @ResponseBody String registerUser(@RequestBody User user){
+        userService.insertUser(user);
+        return "Register Successfully";
+    }
+    @PutMapping(value ="/changepassword",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public String changeUserPassword(@PathVariable(value = "phonenumber") String phonenumber, @RequestParam(value = "password") String password){
+        userService.changePassword(phonenumber, password);
+        return "Change user's password successfully";
     }
 
 }
