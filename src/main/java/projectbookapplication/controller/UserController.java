@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import projectbookapplication.repository.entity.User;
 import projectbookapplication.service.UserService;
+import projectbookapplication.service.model.FixUser;
 
 import java.util.List;
 
@@ -35,10 +36,18 @@ public class UserController {
         return "Register Successfully";
     }
 
-    @PutMapping(value = "/changepassword", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public String changeUserPassword(@PathVariable(value = "phonenumber") String phonenumber, @RequestParam(value = "password") String password) {
-        userService.changePassword(phonenumber, password);
-        return "Change user's password successfully";
+//    @PutMapping(value = "/changepassword/{phonenumber}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+//    public String changeUserPassword(@PathVariable(value = "phonenumber") String phonenumber, @RequestParam(value = "password") String password) {
+//        userService.changePassword(phonenumber, password);
+//        return "Change user's password successfully";
+//    }
+
+    @PutMapping(value = "/changeinfor/{phonenumber}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public @ResponseBody
+    String changeInFor(@PathVariable(value = "phonenumber") String phonenumber,
+                       @RequestBody FixUser modelFix) {
+        userService.changeInforUser(phonenumber, modelFix);
+        return "Changed information of user";
     }
 
     @GetMapping(value = "/login")

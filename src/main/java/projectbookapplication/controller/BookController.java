@@ -3,11 +3,15 @@ package projectbookapplication.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import projectbookapplication.repository.BookRepository;
 import projectbookapplication.repository.entity.Book;
 import projectbookapplication.service.BookService;
+import projectbookapplication.service.model.FixBook;
 
+import javax.websocket.server.PathParam;
 import java.awt.*;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value ="/book")
@@ -55,6 +59,18 @@ public class BookController {
     public @ResponseBody String insertBook(@RequestBody Book book){
         bookService.insertBook(book);
         return "Complete upload book";
+    }
+
+    @PutMapping(value ="/changeinfor/{id}",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public @ResponseBody Book changeInForBook(@PathVariable("id") Integer id,
+                                                @RequestBody FixBook modelfix){
+        return bookService.changeInforBook(id,modelfix);
+    }
+
+    @DeleteMapping(value ="/delete/{id}",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public String deleteBook(@PathVariable("id") Integer id){
+        bookService.deleteBook(id);
+        return "Deleted";
     }
 
 }

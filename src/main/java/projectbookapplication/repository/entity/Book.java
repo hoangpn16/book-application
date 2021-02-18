@@ -30,8 +30,8 @@ public class Book {
     @Column(name="author")
     private String author;
 
-    @Column(name="year_realease")
-    private String yearRealease;
+    @Column(name="year_release")
+    private String yearRelease;
 
     @Column(name="prices")
     private String prices;
