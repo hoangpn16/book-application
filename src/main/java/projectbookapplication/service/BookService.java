@@ -5,9 +5,10 @@ import org.springframework.stereotype.Service;
 import projectbookapplication.repository.BookRepository;
 import projectbookapplication.repository.entity.Book;
 import projectbookapplication.service.model.FixBook;
+import projectbookapplication.service.model.SearchBook;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 public class BookService {
@@ -15,25 +16,25 @@ public class BookService {
     BookRepository bookRepository;
 
 
-    public List<Book> findByTitle(String title) {
-        return bookRepository.findByTitle(title);
-    }
+//    public List<Book> findByTitle(String title) {
+//        return bookRepository.findByTitle(title);
+//    }
 
     public List<Book> findAll() {
         return bookRepository.findAll();
     }
 
-    public List<Book> findByType(String Types) {
-        return bookRepository.findByType(Types);
-    }
+//    public List<Book> findByType(String Types) {
+//        return bookRepository.findByType(Types);
+//    }
+//
+//    public List<Book> findByAuthor(String Authors) {
+//        return bookRepository.findByAuthor(Authors);
+//    }
 
-    public List<Book> findByAuthor(String Authors) {
-        return bookRepository.findByAuthor(Authors);
-    }
-
-    public List<Book> findByYearRelease(String YearRelease) {
-        return bookRepository.findByYearRelease(YearRelease);
-    }
+//    public List<Book> findByYearRelease(String YearRelease) {
+//        return bookRepository.findByYearRelease(YearRelease);
+//    }
 
     public List<Book> showFavoriteBook() {
         return bookRepository.findFavoriteBooks();
@@ -42,6 +43,7 @@ public class BookService {
     public List<Book> showBookSortByPrice() {
         return bookRepository.sortByPrice();
     }
+
 
     // Post
     public Book insertBook(Book book) {
@@ -90,9 +92,18 @@ public class BookService {
         }
         return null;
     }
+
     public String deleteBook(Integer id){
         bookRepository.deleteById(id);
         return "DELETED";
     }
 
+    public Book makeFavorite(Integer id,Boolean favo){
+        Book result = bookRepository.findById(id).orElse(null);
+        if(result == null){
+            return null;
+        }
+        result.setFavorite(favo);
+        return bookRepository.save(result);
+    }
 }
