@@ -1,66 +1,81 @@
 package projectbookapplication.service;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import projectbookapplication.repository.TokenRepository;
 import projectbookapplication.repository.UserRepository;
-import projectbookapplication.repository.entity.User;
+
+import projectbookapplication.repository.entity.UserEntity;
 import projectbookapplication.service.model.FixUser;
 
+import java.io.UnsupportedEncodingException;
+
 import java.util.List;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
 @Service
 public class UserService {
+
+    @Autowired
+    TokenRepository tokenRepository;
+
     @Autowired
     UserRepository userRepository;
 
-    public List<User> getAllUser() {
+    public List<UserEntity> getAllUser() {
         return userRepository.findAll();
     }
 
-    public User getUserByName(String name) {
-        return userRepository.findByName(name);
+    public UserEntity getUserByName(String name) {
+        return userRepository.findByUserName(name);
     }
 
-    public User getUserByPhoneNumbers(String phoneNumber) {
+    public UserEntity getUserByPhoneNumbers(String phoneNumber) {
         return userRepository.findByPhoneNumber(phoneNumber);
     }
+    public UserEntity getInforUser(Integer id){
+        return userRepository.findOneById(id);
+    }
 
-    public User insertUser(User user) {
-        User newUser = new User();
-        boolean check = checkPhoneNumber(user.getPhoneNumber());
-        if (check == false) {
+    public UserEntity insertUser(FixUser user) throws UnsupportedEncodingException {
+        UserEntity newUser = new UserEntity();
+        boolean check = checkPhoneNumber(user.getPhonenumber());
+        if (!check) {
             System.out.println("Phone number invalid");
         }
-        newUser.setName(user.getName());
-        newUser.setPhoneNumber(user.getPhoneNumber());
+
+        newUser.setUserName(user.getName());
+        newUser.setPhoneNumber(user.getPhonenumber());
         newUser.setEmail(user.getEmail());
-        newUser.setPassword(user.getPassword());
+
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String password = encoder.encode(user.getPassword());
+        newUser.setPassword(password);
+        newUser.setRole("user");
+
         return userRepository.save(newUser);
     }
 
-    public User changePassword(String phoneNumber, String password) {
-        User result = userRepository.findByPhoneNumber(phoneNumber);
+    public UserEntity changePassword(String phoneNumber, String password) {
+        UserEntity result = userRepository.findByPhoneNumber(phoneNumber);
         if (result != null) {
             result.setPassword(password);
         }
         return userRepository.save(result);
     }
 
-    public User changeInforUser(String phoneNumber, FixUser modelFix) {
-        boolean check = checkPhoneNumber(phoneNumber);
-        if (check == false) {
-            System.out.println("Phone number invalid");
-            return null;
-        }
-        User result = userRepository.findByPhoneNumber(phoneNumber);
+    public UserEntity changeInforUser(Integer id, FixUser modelFix) {
+        UserEntity result = userRepository.findOneById(id);
         if (result == null) {
-            System.out.println("User doesn't existed");
-            return null;
+            throw new RuntimeException("User doesn't exists");
         } else {
             if (modelFix.getName() != null) {
-                result.setName(modelFix.getName());
+                result.setUserName(modelFix.getName());
             }
             if (modelFix.getEmail() != null) {
                 result.setEmail(modelFix.getEmail());
@@ -72,29 +87,13 @@ public class UserService {
         return userRepository.save(result);
     }
 
-    public User loginUser(String phoneNumber, String password) {
-        boolean check = checkPhoneNumber(phoneNumber);
-        if (check == false) {
-            System.out.println("Phone number invalid");
-            return null;
-        }
-        User result = userRepository.findByPhoneNumber(phoneNumber);
-        if (result == null) {
-            System.out.println("Incorrect password");
-            return null;
-        }
-        if (result.getPassword().equals(password)) {
-            System.out.println("Login Successfully");
-            return result;
-        }
-        return null;
-    }
-
     public boolean checkPhoneNumber(String phoneNumber) {
         String regex = "^0[98]{1}\\d{8}$";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(phoneNumber);
         return matcher.find();
     }
+
+
 
 }

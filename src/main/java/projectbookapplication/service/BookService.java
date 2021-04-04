@@ -3,9 +3,8 @@ package projectbookapplication.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import projectbookapplication.repository.BookRepository;
-import projectbookapplication.repository.entity.Book;
+import projectbookapplication.repository.entity.BookEntity;
 import projectbookapplication.service.model.FixBook;
-import projectbookapplication.service.model.SearchBook;
 
 import java.util.List;
 
@@ -20,7 +19,7 @@ public class BookService {
 //        return bookRepository.findByTitle(title);
 //    }
 
-    public List<Book> findAll() {
+    public List<BookEntity> findAll() {
         return bookRepository.findAll();
     }
 
@@ -36,18 +35,18 @@ public class BookService {
 //        return bookRepository.findByYearRelease(YearRelease);
 //    }
 
-    public List<Book> showFavoriteBook() {
+    public List<BookEntity> showFavoriteBook() {
         return bookRepository.findFavoriteBooks();
     }
 
-    public List<Book> showBookSortByPrice() {
+    public List<BookEntity> showBookSortByPrice() {
         return bookRepository.sortByPrice();
     }
 
 
     // Post
-    public Book insertBook(Book book) {
-        Book newBook = new Book();
+    public BookEntity insertBook(BookEntity book) {
+        BookEntity newBook = new BookEntity();
         newBook.setIdUser(book.getIdUser());
         newBook.setAuthor(book.getAuthor());
         newBook.setLink_img(book.getLink_img());
@@ -61,8 +60,8 @@ public class BookService {
     }
 
     // PUT
-    public Book changeInforBook(Integer id, FixBook modelFix) {
-        Book result = bookRepository.findById(id).orElse(null);
+    public BookEntity changeInforBook(Integer id, FixBook modelFix) {
+        BookEntity result = bookRepository.findById(id).orElse(null);
         if (result != null) {
             if (modelFix.getTitle() != null) {
                 result.setTitle(modelFix.getTitle());
@@ -98,8 +97,8 @@ public class BookService {
         return "DELETED";
     }
 
-    public Book makeFavorite(Integer id,Boolean favo){
-        Book result = bookRepository.findById(id).orElse(null);
+    public BookEntity makeFavorite(Integer id, Boolean favo){
+        BookEntity result = bookRepository.findById(id).orElse(null);
         if(result == null){
             return null;
         }

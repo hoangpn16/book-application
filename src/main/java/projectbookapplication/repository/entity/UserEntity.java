@@ -8,14 +8,14 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Table(name = "user")
-public class User {
+public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "user_name")
+    private String userName;
 
     @Column(name = "phone_number")
     private String phoneNumber;
@@ -25,6 +25,9 @@ public class User {
 
     @Column(name = "email")
     private String email;
+
+    @Column(name = "role")
+    private String role;
 
 }
 
